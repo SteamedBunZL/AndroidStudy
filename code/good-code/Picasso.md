@@ -5,7 +5,7 @@
 ### 1 单例+Builder设计模式
 
 ```java
- public static Picasso with(@NonNull Context context) {
+public static Picasso with(@NonNull Context context) {
     if (context == null) {
       throw new IllegalArgumentException("context == null");
     }
@@ -17,7 +17,7 @@
       }
     }
     return singleton;
-  }
+ }
 ```
 
 ```java
@@ -43,7 +43,7 @@ public Picasso build() {
 
       return new Picasso(context, dispatcher, cache, listener, transformer, requestHandlers, stats,
           defaultBitmapConfig, indicatorsEnabled, loggingEnabled);
-    }
+}
 ```
 
 
@@ -55,7 +55,7 @@ public Picasso build() {
 ```java
 static boolean isMain() {
     return Looper.getMainLooper().getThread() == Thread.currentThread();
-  }
+}
 ```
 
 
@@ -79,7 +79,7 @@ static class DispatcherThread extends HandlerThread {
     DispatcherThread() {
       super(Utils.THREAD_PREFIX + DISPATCHER_THREAD_NAME, THREAD_PRIORITY_BACKGROUND);
     }
-  }
+}
 ```
 
 #### 4.2 继承Handler
@@ -96,7 +96,7 @@ private static class DispatcherHandler extends Handler {
     @Override public void handleMessage(final Message msg) {
       
     }
-  }
+}
 
 ```
 
@@ -125,7 +125,7 @@ static void flushStackLocalLeaks(Looper looper) {
       }
     };
     handler.sendMessageDelayed(handler.obtainMessage(), THREAD_LEAK_CLEANING_MS);
-  }
+}
 ```
 
 ### 5 自定义线程池PicassoExecutorService
@@ -136,7 +136,7 @@ static void flushStackLocalLeaks(Looper looper) {
 PicassoExecutorService() {
     super(DEFAULT_THREAD_COUNT, DEFAULT_THREAD_COUNT, 0, TimeUnit.MILLISECONDS,
         new PriorityBlockingQueue<Runnable>(), new Utils.PicassoThreadFactory());
-  }
+}
 
 ```
 
@@ -179,12 +179,12 @@ PicassoExecutorService() {
       default:
         setThreadCount(DEFAULT_THREAD_COUNT);
     }
-  }
+ }
 
  private void setThreadCount(int threadCount) {
     setCorePoolSize(threadCount);
     setMaximumPoolSize(threadCount);
-  }
+ }
 
 ```
 
@@ -193,7 +193,7 @@ PicassoExecutorService() {
 ```java
 static <T> T getService(Context context, String service) {
     return (T) context.getSystemService(service);
-  }
+}
 
 ```
 
@@ -202,7 +202,7 @@ static <T> T getService(Context context, String service) {
 ```java
 static boolean hasPermission(Context context, String permission) {
     return context.checkCallingOrSelfPermission(permission) == PackageManager.PERMISSION_GRANTED;
-  }
+}
 
 ```
 
@@ -220,23 +220,23 @@ hasPermission(context, Manifest.permission.ACCESS_NETWORK_STATE);
 ### 8 计算可用的RAM大小的15%
 
 ```java
-  static int calculateMemoryCacheSize(Context context) {
-    ActivityManager am = getService(context, ACTIVITY_SERVICE);
-    boolean largeHeap = (context.getApplicationInfo().flags & FLAG_LARGE_HEAP) != 0;
-    int memoryClass = am.getMemoryClass();
-    if (largeHeap && SDK_INT >= HONEYCOMB) {
-      memoryClass = ActivityManagerHoneycomb.getLargeMemoryClass(am);
-    }
-    // Target ~15% of the available heap.
-    return (int) (1024L * 1024L * memoryClass / 7);
+static int calculateMemoryCacheSize(Context context) {
+  ActivityManager am = getService(context, ACTIVITY_SERVICE);
+  boolean largeHeap = (context.getApplicationInfo().flags & FLAG_LARGE_HEAP) != 0;
+  int memoryClass = am.getMemoryClass();
+  if (largeHeap && SDK_INT >= HONEYCOMB) {
+    memoryClass = ActivityManagerHoneycomb.getLargeMemoryClass(am);
   }
+  // Target ~15% of the available heap.
+  return (int) (1024L * 1024L * memoryClass / 7);
+}
 
-  @TargetApi(HONEYCOMB)
-  private static class ActivityManagerHoneycomb {//这种写法赞
-    static int getLargeMemoryClass(ActivityManager activityManager) {
-      return activityManager.getLargeMemoryClass();
-    }
+@TargetApi(HONEYCOMB)
+private static class ActivityManagerHoneycomb {//这种写法赞
+  static int getLargeMemoryClass(ActivityManager activityManager) {
+    return activityManager.getLargeMemoryClass();
   }
+}
 
 ```
 
@@ -246,26 +246,26 @@ hasPermission(context, Manifest.permission.ACCESS_NETWORK_STATE);
 
 ```java
 @TargetApi(JELLY_BEAN_MR2)
-  static long calculateDiskCacheSize(File dir) {
-    long size = MIN_DISK_CACHE_SIZE;
+static long calculateDiskCacheSize(File dir) {
+  long size = MIN_DISK_CACHE_SIZE;
 
-    try {
-      StatFs statFs = new StatFs(dir.getAbsolutePath());
-      //noinspection deprecation
-      long blockCount =
-          SDK_INT < JELLY_BEAN_MR2 ? (long) statFs.getBlockCount() : statFs.getBlockCountLong();
-      //noinspection deprecation
-      long blockSize =
-          SDK_INT < JELLY_BEAN_MR2 ? (long) statFs.getBlockSize() : statFs.getBlockSizeLong();
-      long available = blockCount * blockSize;
-      // Target 2% of the total space.
-      size = available / 50;
-    } catch (IllegalArgumentException ignored) {
-    }
-
-    // Bound inside min/max size for disk cache.
-    return Math.max(Math.min(size, MAX_DISK_CACHE_SIZE), MIN_DISK_CACHE_SIZE);
+  try {
+    StatFs statFs = new StatFs(dir.getAbsolutePath());
+    //noinspection deprecation
+    long blockCount =
+      SDK_INT < JELLY_BEAN_MR2 ? (long) statFs.getBlockCount() : statFs.getBlockCountLong();
+    //noinspection deprecation
+    long blockSize =
+      SDK_INT < JELLY_BEAN_MR2 ? (long) statFs.getBlockSize() : statFs.getBlockSizeLong();
+    long available = blockCount * blockSize;
+    // Target 2% of the total space.
+    size = available / 50;
+  } catch (IllegalArgumentException ignored) {
   }
+
+  // Bound inside min/max size for disk cache.
+  return Math.max(Math.min(size, MAX_DISK_CACHE_SIZE), MIN_DISK_CACHE_SIZE);
+}
 
 ```
 
