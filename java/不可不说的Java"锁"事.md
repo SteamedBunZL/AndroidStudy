@@ -271,11 +271,11 @@ Monitor是线程私有的数据结构，每一个线程都有一个可用monitor
 
 在独享锁中这个值通常是0或者1（如果是重入锁的话state值就是重入的次数），在共享锁中state就是持有锁的数量。但是在ReentrantReadWriteLock中有读、写两把锁，所以需要在一个整型变量state上分别描述读锁和写锁的数量（或者也可以叫状态）。于是将state变量“按位切割”切分成了两个部分，高16位表示读锁状态（读锁个数），低16位表示写锁状态（写锁个数）。如下图所示：
 
-![img](data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==)
+![img](https://mmbiz.qpic.cn/mmbiz_png/hEx03cFgUsXibicYtRt824nicRjKGTibicl7aUpVCDzUWQMLx2zVYI9ZvibVmRv4r1TYiaHIhAiaJ2fTu3drCEkjUP3KDA/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)
 
 了解了概念之后我们再来看代码，先看写锁的加锁源码：
 
-![img](data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==)
+![img](https://mmbiz.qpic.cn/mmbiz_png/hEx03cFgUsUWxF3IJSFicIicbpueYm7MoK6c6s9TAnUbp3GVsACzylPEsY9icicf2ibzIkSUnsI4bzNNo45OZzicIVuA/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)
 
 - 这段代码首先取到当前锁的个数c，然后再通过c来获取写锁的个数w。因为写锁是低16位，所以取低16位的最大值与当前的c做与运算（ int w = exclusiveCount(c); ），高16位和0与运算后是0，剩下的就是低位运算的值，同时也是持有写锁的线程数目。
 - 在取到写锁线程的数目后，首先判断是否已经有线程持有了锁。如果已经有线程持有了锁（c!=0），则查看当前写锁线程的数目，如果写线程数为0（即此时存在读锁）或者持有锁的线程不是当前线程就返回失败（涉及到公平锁和非公平锁的实现）。
