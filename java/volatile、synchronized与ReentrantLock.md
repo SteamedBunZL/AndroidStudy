@@ -159,7 +159,7 @@ public class CopyOnWriteArrayList{
 
 并发包的类族中，Lock是JUC包的顶层接口，它的实现逻辑并未用到synchronized，而是利用了volatile的可见性。
 
-![Lock继承图](/Users/zhanglong/stevegit/AndroidStudy/java/image/Lock继承图.png)
+![Lock继承图](image/Lock继承图.png)
 
 ReentrantLock对于Lock接口的实现主要依赖了Sync，而Sync继承了AbstractQueuedSynchronizer（AQS），它是JUC包实现同步的基础工具。在AQS中，定义了一个volitale int state 变量作为共享资源，如果线程获取资源失败，则进入同步队列FIFO队列中等待；如果成功获取资源就执行临界区代码。执行完释放资源时，会通知同步队列中的等待线程来获取资源后出队并执行。
 
