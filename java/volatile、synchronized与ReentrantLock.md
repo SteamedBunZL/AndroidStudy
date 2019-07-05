@@ -152,3 +152,15 @@ public class CopyOnWriteArrayList{
 ```
 
 在实际业务中，如何清晰地判断一写多读的场景显得尤为重要。如果不确定共享变量是否会被多个线程并发写，保险的做法是使用同步代码块来实现线程同步。另外，因为所有的操作都需要同步给内存变量，所以volatile一定会使线程执行速度变慢，故要审慎定义和使用volatile
+
+
+
+### ReentrantLock
+
+并发包的类族中，Lock是JUC包的顶层接口，它的实现逻辑并未用到synchronized，而是利用了volatile的可见性。
+
+![Lock继承图](/Users/zhanglong/stevegit/AndroidStudy/java/image/Lock继承图.png)
+
+ReentrantLock对于Lock接口的实现主要依赖了Sync，而Sync继承了AbstractQueuedSynchronizer（AQS），它是JUC包实现同步的基础工具。在AQS中，定义了一个volitale int state 变量作为共享资源，如果线程获取资源失败，则进入同步队列FIFO队列中等待；如果成功获取资源就执行临界区代码。执行完释放资源时，会通知同步队列中的等待线程来获取资源后出队并执行。
+
+AQS是抽象类，内置自旋锁实现的同步队列，封装入队和出队的操作，提供独占、共享、中断等特性的方法。AQS的子类可以定义不同的资源实现不同性质的方法。比如可重入锁ReentrantLock，定义state 为0时可以获取资源并置为1。若已获得资源，state不断加1，在释放资源时state减1，直至为0；CountDownLatch初始时定义了资源总量state = count，countDown()不断将state减1，当state = 0 时才获得锁释放后state 就一直是0
