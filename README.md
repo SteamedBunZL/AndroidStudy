@@ -76,7 +76,7 @@
 
   [在AndroidStudio中自定义Gradle插件](bytecode/在AndroidStudio中自定义Gradle插件.md)
 
-  [Android Gradle Plugin打包Apk过程中的Transform API](bytecode/Android Gradle Plugin打包Apk过程中的Transform API.md)
+  [打包Apk过程中的TransformAPI](bytecode/打包Apk过程中的TransformAPI.md)
 
   [一起玩转Android项目中的字节码](bytecode/一起玩转Android项目中的字节码.md)
 
