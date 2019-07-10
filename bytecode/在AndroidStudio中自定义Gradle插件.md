@@ -34,13 +34,13 @@ public class MyPlugin implements Plugin<Project> {
 > - (6) 现在，我们已经定义好了自己的`gradle`插件类，接下来就是告诉`gradle`，哪一个是我们自定义的插件类，因此，需要在`main`目录下新建`resources`目录，然后在`resources`目录里面再新建`META-INF`目录，再在`META-INF`里面新建`gradle-plugins`目录。最后在`gradle-plugins`目录里面新建properties文件，注意这个文件的命名，你可以随意取名，但是后面使用这个插件的时候，会用到这个名字。比如，你取名为`com.hc.gradle.properties`，而在其他build.gradle文件中使用自定义的插件时候则需写成：
 
 ```java
-apply plugin: 'com.hc.gradle'1
+apply plugin: 'com.hc.gradle'
 ```
 
 然后在`com.hc.gradle.properties`文件里面指明你自定义的类
 
 ```properties
-implementation-class=com.hc.plugin.MyPlugin1
+implementation-class=com.hc.plugin.MyPlugin
 ```
 
 现在，你的目录应该如下：
@@ -100,7 +100,7 @@ uploadArchives {
 
 # 3 使用自定义的插件
 
-接下来就是使用自定义的插件了，一般就是在`app`这个模块中使用自定义插件，因此在`app`这个`Module`的build.gradle文件中，需要指定本地`Maven`地址、自定义插件的名称以及依赖包名。简而言之，就是在`app`这个`Module`的build.gradle文件中后面附加如下代码：
+接下来就是使用自定义的插件了，一般就是在`app`这个模块中使用自定义插件，因此在`app`这个`Module`的build.gradle文件中，需要指定本地`Maven`地址、自定义插件的名称以及依赖包名。简而言之，就是在`app`这个`Module`的build.gradle文件中后面附s加如下代码：
 
 ```groovy
 buildscript {
@@ -174,7 +174,7 @@ public class SecondPlugin implements Plugin<Project> {
 在`app`这个`Module`中如何使用呢？直接在app的build.gradle下加入
 
 ```groovy
-apply plugin: com.hc.second.SecondPlugin1
+apply plugin: com.hc.second.SecondPlugin
 ```
 
 `clean`一下，再`make project`，`messages`窗口信息如下：

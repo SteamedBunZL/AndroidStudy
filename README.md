@@ -66,7 +66,7 @@
 
 - #### Android打包流程
 
-[Apk打包流程](bytecode/Apk打包流程.md)
+  [Apk打包流程](bytecode/Apk打包流程.md)
 
 
 
@@ -74,9 +74,11 @@
 
 - #### 自定义Gradle插件、Transform API
 
-[在AndroidStudio中自定义Gradle插件](bytecode/在AndroidStudio中自定义Gradle插件.md)
+  [在AndroidStudio中自定义Gradle插件](bytecode/在AndroidStudio中自定义Gradle插件.md)
 
+  [Android Gradle Plugin打包Apk过程中的Transform API](bytecode/Android Gradle Plugin打包Apk过程中的Transform API.md)
 
+  [一起玩转Android项目中的字节码](bytecode/一起玩转Android项目中的字节码.md)
 
 
 
